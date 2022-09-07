@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <base href="./">
 
-    <title>1Trade to success</title>
+    <title>1Trade</title>
 
     <!-- Custom fonts for this template-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet" type="text/css">
@@ -64,7 +64,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Why 1Trade ?</h6>
                         <a class="collapse-item" href="/faqs">Faqs</a>
-                        <a class="collapse-item" href="sauce.md">Sauce</a>
+                        <a class="collapse-item" href="/sauce">Sauce</a>
+                        <a class="collapse-item" href="goldenwords.md">oldenrules</a>
                     </div>
                 </div>
             </li>
@@ -108,6 +109,10 @@
                 <a class="btn btn-success btn-sm" href="https://play.google.com/store/apps/details?id=com.pivot.screener">Try CryptoPivots!</a>
             </div>
 
+            <div class="sidebar-card d-none d-lg-flex">
+                <div><span>Visited </span><span id="visits">237</span></div>
+            </div>
+
         </ul>
         <!-- End of Sidebar -->
 
@@ -123,6 +128,7 @@
                   <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                       <i class="fa fa-bars"></i>
                   </button>
+                  <div class="cryptohopper-web-widget" data-id="2" data-realtime="on" data-atid="29919"></div>
 
               </nav>
               <!-- End of Topbar -->
@@ -178,7 +184,14 @@
     <!-- Page level custom scripts -->
     <script src="assets/js/demo/chart-area-demo.js"></script>
     <script src="assets/js/demo/chart-pie-demo.js"></script>
+    <script src="https://www.cryptohopper.com/widgets/js/script"></script>
+    <script>
+        function cb(response) {
+            document.getElementById('visits').innerText = response.value;
+        }
+    </script>
+    <script async="" src="https://api.countapi.xyz/hit/1trade.publichome.page/visits?callback=cb"></script>
 
-<script src="runtime.e1b02cf9edac2860.js" type="module"></script><script src="polyfills.57a984eaafa47694.js" type="module"></script><script src="main.04737b389ac39381.js" type="module"></script>
+<script src="runtime.e1b02cf9edac2860.js" type="module"></script><script src="polyfills.57a984eaafa47694.js" type="module"></script><script src="main.dde87835e193bd30.js" type="module"></script>
 
 </body></html>
