@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+<script type="text/javascript" language="javascript">
+
+const getSignature = (parameters, secret) => {
+  let orderedParams = "";
+
+  Object.keys(parameters).sort().forEach(function(key) {
+    orderedParams += key + "=" + parameters[key] + "&";
+  });
+  orderedParams = orderedParams.substring(0, orderedParams.length - 1);
+
+  return CryptoJS.HmacSHA256(orderedParams, secret);
+};
+
+const getUrlParams = (parameters) => {
+  let orderedParams = "";
+
+  Object.keys(parameters).sort().forEach(function(key) {
+    orderedParams += key + "=" + parameters[key] + "&";
+  });
+  return orderedParams.substring(0, orderedParams.length - 1);
+};
+
+
+const getPositions = async (inverse, symbol) => {
+  
+  const queryParams = {
+      api_key: "yH6SemD2ixC7gbuA35",
+      symbol: symbol,
+      timestamp: Date.now()
+	};
+
+  let urlParams = getUrlParams(queryParams) ;
+    
+  const sign = CryptoJS.HmacSHA256(urlParams, 'NDs1gM6SraoFaT13sdtp7Y0B6E3CUBxhQEuN') ;
+  let bybitUrl = 'https://api-testnet.bybit.com/private/linear/position/list?' ;
+  if(inverse == true) {
+      bybitUrl = 'https://api-testnet.bybit.com/v2/private/position/list?' ;
+  }
+  const getUrl = bybitUrl + urlParams + '&sign=' + sign ;
+
+
+  const response = await fetch(getUrl);
+  const myJson = await response.json(); //extract JSON from the 
+  console.log(JSON.stringify(myJson)) ;
+}
+
+const createOrder = async (inverse, symbol, side, quantity) => {
+  
+  const queryParams = {
+      api_key: 'yH6SemD2ixC7gbuA35',
+      symbol: symbol,
+      timestamp: Date.now(),
+      side : side,
+      order_type : 'Market',
+      time_in_force:'GoodTillCancel',
+      reduce_only:true,
+      close_on_trigger:true,
+      qty:quantity,
+      position_idx:0
+  };
+
+  let urlParams = getUrlParams(queryParams) ;
+
+  const sign = CryptoJS.HmacSHA256(urlParams, 'NDs1gM6SraoFaT13sdtp7Y0B6E3CUBxhQEuN') ;
+
+  const postConfig = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: urlParams + '&sign=' + sign
+    };
+  console.log('Payload :' + postConfig.body);
+
+  let bybitUrl = 'https://api-testnet.bybit.com/private/linear/order/create' ;
+  if(inverse == true) {
+      bybitUrl = 'https://api-testnet.bybit.com/v2/private/order/create' ;
+  }
+  const postUrl = bybitUrl ;
+  console.log('Url :' + postUrl);
+
+
+  const response = await fetch(postUrl, postConfig);
+  const myJson = await response.json(); //extract JSON from the 
+  consolre.log(JSON.stringify(myJson)) ;
+}
+
+const getKLine = async (inverse, symbol, time) => {
+
+  const timestamp = Math.ceil( Date.now() / 1000) - ( 3 * 24 * 60 * 60) ;
+
+  let bybitUrl = 'https://api-testnet.bybit.com/public/linear/kline?' ;
+  if(inverse == true) {
+      bybitUrl = 'https://api-testnet.bybit.com/v2/public/kline/list?' ;
+  }
+  const getUrl = bybitUrl + 'symbol=' + symbol + '&interval=' + time + '&limit=3&from=' + timestamp ;
+  console.log(getUrl) ;
+
+  const response = await fetch(getUrl);
+  const myJson = await response.json(); //extract JSON from the 
+  console.log(JSON.stringify(myJson)) ;
+}
+
+const getAccountBalance = async (coin) => {
+
+  const queryParams = {
+      api_key: "yH6SemD2ixC7gbuA35",
+      coin: coin,
+      timestamp: Date.now()
+  };
+
+  let urlParams = getUrlParams(queryParams) ;
+    
+  const sign = CryptoJS.HmacSHA256(urlParams, 'NDs1gM6SraoFaT13sdtp7Y0B6E3CUBxhQEuN') ;
+  let bybitUrl = 'https://api-testnet.bybit.com/v2/private/wallet/balance?' ;
+  const getUrl = bybitUrl + urlParams + '&sign=' + sign ;
+  console.log(getUrl) ;
+
+  const response = await fetch(getUrl);
+  const myJson = await response.json(); //extract JSON from the 
+  console.log(JSON.stringify(myJson)) ;
+}
+
+</script>
+
+<h1>1 Simple trade</h1>
+
+<button type="button" onclick="getPositions(false, 'BTCUSDT')">Show Positions</button>
+<button type="button" onclick="getPositions(false, 'BTCUSDT')">BUY / LONG</button>
+<button type="button" onclick="getPositions(false, 'BTCUSDT')">SELL / SHORT</button>
+<button type="button" onclick="createOrder(false, 'BTCUSDT', 'Sell')">Close [ Market ]</button>
+<button type="button" onclick="getKLine(false, 'BTCUSDT', 'D')">Kline</button>
+<button type="button" onclick="getAccountBalance('BTC')">BTC Balance</button>
+<button type="button" onclick="getAccountBalance('USDT')">USDT Balance</button>
+ 
+</body>
+</html>
